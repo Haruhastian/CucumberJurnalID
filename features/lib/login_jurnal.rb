@@ -7,8 +7,8 @@ class LoginJurnal
   end
 
   def navigate_jurnal
-    @driver.get 'https://www.jurnal.id/id/'
-    # @driver.get 'http://sandbox.jurnal.id/users/login'
+    # @driver.get 'https://www.jurnal.id/id/'
+    @driver.get 'http://sandbox.jurnal.id/users/login'
     @driver.manage.timeouts.implicit_wait = 10
   end
 

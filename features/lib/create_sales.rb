@@ -1,3 +1,4 @@
+require 'pry'
 class CreateSalesInvoice
   def initialize(driver, wait)
     @driver = driver
@@ -33,6 +34,7 @@ class CreateSalesInvoice
     if @driver.find_element(:id, 'sales-header').text == " Create Sales Invoice "
       puts "Successfully access 'Create Sales' Invoice."
     end
+
   end
 
   def billing_req
@@ -50,6 +52,8 @@ class CreateSalesInvoice
       @driver.action.click(customer_select).perform
       @driver.find_element(:xpath, "//span[contains(.,'Hikaru')]").click
     end
+
+
     sleep(2)
 
     #Fill Billing Address etc
@@ -104,21 +108,32 @@ class CreateSalesInvoice
   end
 
   def billing_req_empty
+    #For the pop-up desktop banner
+    @wait.until do
+      @driver.find_element(:id, 'optInTextConventional')
+    end
+
+    #Select allow for notifications
+    @driver.find_element(:xpath, '//*[@id="desktopBannerWrapped"]/div/div[3]/div[1]/button[1]').click
+
     #Select Contact to add new customer
     customer_dropdown = @driver.find_element(:id, 'select_contact')
     customer_dropdown.click
+    # binding.pry
 
     @wait.until do
       @driver.find_element(:class, "multiselect__content-wrapper")
     end
 
     # add_customer = @driver.find_element(:xpath, "//span[contains(text(),'+ Add new')]")
+    # add_customer.click
     add_customer_2 = @driver.find_element(:xpath, "//button[contains(text(),'+ Add new')]")
     add_customer_2.click
 
     @wait.until do
       @driver.find_element(:id, 'display_name')
     end
+
 
     #Fill the Display Name
     new_name_cust = @driver.find_element(:id, 'display_name')
@@ -173,7 +188,7 @@ class CreateSalesInvoice
     due_date_fill = @driver.find_element(:xpath, "//td[@title='#{due_date_input.to_s}']")
     due_date_fill.click
 
-    @driver.find_element(:id, 'sales_table_list').click
+    # @driver.find_element(:id, 'sales_table_list').click
   end
   def product_req_empty
     #Make new Product
@@ -268,11 +283,11 @@ class CreateSalesInvoice
 
   def validate_invoice
     #Validation
-    if @driver.find_element(:id, 'customer_name').text == @random_character
+    if @driver.find_element(:id, 'customer_name').text == /^@random_character$/
       puts "The Invoice has been created and validated identically."
     else
       puts @driver.find_element(:id, 'customer_name').text
-      puts @random_character
+      puts @random_character.text
       raise "The Invoice isn't the same as just created."
     end
 

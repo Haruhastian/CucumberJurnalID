@@ -2,6 +2,7 @@ require 'selenium-webdriver'
 require 'webdrivers'
 require 'cucumber'
 require 'yaml'
+require 'pry'
 
 Before do
   @driver = Selenium::WebDriver.for :chrome
